@@ -13,6 +13,9 @@ class UserManager(BaseUserManager):
     def _create_user_object(self, email, password, **extra_fields):
         if not email:
             raise ValueError("The given email must be set")
+        user_type = extra_fields.get('user_type')
+        if not user_type or user_type not in ['T', 'S']:
+            raise ValueError('The user type must be "T" or "S"')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.password = make_password(password)
@@ -75,9 +78,17 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
 
+    USER_TYPE_CHOICES = (
+        ('T', 'Professor'),
+        ('S', 'Estudante')
+    )
+
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
     email = models.EmailField(_("email address"), unique=True)
+    user_type = models.CharField(
+        choices=USER_TYPE_CHOICES, null=False, blank=False
+    )
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,
