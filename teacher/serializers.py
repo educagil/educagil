@@ -18,4 +18,3 @@ class TeacherSerializer(serializers.ModelSerializer):
         # Cria o Teacher
         teacher = Teacher.objects.create(user=user, **validated_data)
         return teacher
-
