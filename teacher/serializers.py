@@ -13,6 +13,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 
     @classmethod
     def create(self, validated_data):
+        print(validated_data)
         user_data = validated_data.pop('user')
         user = UserSerializer().create(user_data)  # Cria o User
         # Cria o Teacher
